@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Beeblog</title>
+    <script src="/static/jquery-3.4.1.min.js"></script>
+    <link href="/static/bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="shortcut icon" href="/static/favicon1.ico" />
+    <style>
+        .hide{
+            display: none;
+        }
+    </style>
+</head>
+<body style="background-color: #dddddd">
+<div style="position: absolute;width: 500px;height:500px;left:50%;top:50%;margin-top: -250px;margin-left:-250px;background-color: white;border-radius: 2%">
+    <div style="margin:0 auto;width: 300px;height:220px;background-color: white;margin-top: 50px">
+        <form action="findpsw.html" method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="email">邮箱</label>
+                <input type="text" class="form-control" name="email" id="email" placeholder="必填">
+            </div>
+            <div class="form-group">
+                <label for="phonenum">你的手机号</label>
+                <input type="text" class="form-control" name="phonenum" id="phonenum" placeholder="必填">
+            </div>
+            <div class="form-group">
+                <label for="birthday">你的生日</label>
+                <input type="text" class="form-control" name="birthday" id="birthday" placeholder="必填">
+            </div>
+            <div class="form-group">
+                <label for="hobby">你的爱好</label>
+                <input type="text" class="form-control" name="hobby" id="hobby" placeholder="必填">
+            </div>
+            <div id="hide" class="hide" style="float: right;color: red;"></div>
+            <div>
+            <a id="confirm" class="btn btn-default">确认</a>
+            <a href="login.html" class="btn btn-default">取消</a>
+            </div>
+        </form>
+        <div style="width:240px;margin: 0 auto;margin-top: 40px;color: #919191">Talk is cheap,Show me your code
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="/static/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+<script>
+    $('#confirm').click(function () {
+        $.ajax({
+            url: "findpsw.html",
+            type: 'POST',
+            data: {
+                'email': $('#email').val(),
+                'phonenum': $('#phonenum').val(),
+                'birthday': $('#birthday').val(),
+                'hobby': $('#hobby').val(),
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            success: function (data) {
+                if (data == "FAILED") {
+                    $('#hide').text("邮箱不存在").removeClass('hide')
+                }else if(data == "FAILED1"){
+                    $('#hide').text("信息有误").removeClass('hide')
+                }else if(data == "OK"){
+                    window.location.href = '/login/setpsw'
+                }else {
+                    $('#hide').text("所有字段不能为空").removeClass('hide')
+                }
+            }
+        })
+    });
+</script>
+</body>
+</html>

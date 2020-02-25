@@ -1,0 +1,295 @@
+{% block page %}{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Beeblog</title>
+    <link href="/static/bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/jquery.bxslider.css">
+    <link rel="shortcut icon" href="/static/favicon1.ico" />
+</head>
+<style>
+    body {
+        margin: 0;
+    }
+
+    .active {
+        background-color: gainsboro;
+        border-radius: 10%;
+    }
+    .hide {
+        display: none;
+    }
+    .clicking {
+        text-decoration: none;
+        cursor: pointer;
+    }
+</style>
+<body>
+<button onclick="pageScroll()" style="position: fixed;bottom: 10%;right: 10%;z-index: 20" type="button"
+        class="btn btn-default btn-lg">
+    <a style="text-decoration: none;"><span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span> 返回顶部</a>
+</button>
+<nav class="navbar navbar-default" style="padding: 5px 0">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            {% block main %}{% endblock %}
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                {% block article_type %}
+                {% endblock %}
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                {% block content %}
+                {% endblock %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div>
+    <div class="container">
+        {% if article_c %}
+            <div class="col-md-9"
+                 style="padding-left: 0;width: 1150px;background-color: #eeeeee;border-radius: 20px;padding-bottom: 20px">
+                <div class="media">
+                    <div class="media-left">
+                    </div>
+                    <div class="media-body">
+                        {% for i in my_str %}
+                            <a style="text-decoration: none" href="/Beeblog/{{ d }}-0-{{ i.article_id }}"><h4
+                                    class="media-heading">{{ i.article_title }}</h4></a>
+                            <p>{{ i.article_info }}</p>
+                        {% endfor %}
+                        <h1>{{ article_t }}</h1>
+                        <div><img src="{{ user_header }}"><a>{{ user_name }}</a><span
+                                style="color: gray">{{ send_time }}</span></div>
+                        <div>
+                            {% autoescape off %}
+                                {{ article_c }}
+                            {% endautoescape %}
+                        </div>
+                        <div>
+                            <form action="personalweb.html" method="post" style="text-align: right">
+                                {% csrf_token %}
+                                <textarea name="comment"
+                                          style="border-radius: 5px;display: block;width: 1125px;height: 100px;"
+                                          maxlength="1000"
+                                          placeholder="给你一个神评的机会"></textarea>
+                                <input style="margin-top: 10px;display: block" type="submit" class="btn btn-danger" value="发表评论">
+                                <input name="reply" style="display: none" value="0">
+                            </form>
+                        </div>
+                        <div>
+                            {{ cr }}
+                        </div>
+                        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">回复评论</h4>
+      </div>
+      <div class="modal-body">
+       <form>
+          <div class="form-group">
+            <label for="message-text" class="control-label">内容:</label>
+            <textarea class="form-control" id="content1" name="message-text" placeholder="请输入"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+        <button type="button" class="btn btn-primary" onclick="send()" id="save">发送</button>
+      </div>
+    </div>
+  </div>
+</div>
+                    </div>
+                </div>
+            </div>
+        {% elif label %}
+            <div class="col-md-9" style="padding-left: 0;">
+                <div class="media">
+                    <div class="media-left">
+                    </div>
+                    <div class="media-body">
+                        <h1 style="border-bottom: gainsboro">我的标签</h1>
+                        {% for i in label %}
+                            <!-- Button trigger modal -->
+                            <button type="button" class="btn btn-primary btn-lg" data-toggle="modal"
+                                    data-target="#myModal" id="label_name">
+                                {{ i.label_name }}
+                            </button>
+                            <span id="label_id" style="display: none">{{ i.label_id }}</span>
+                            <!-- Modal -->
+                            <div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+                                 aria-labelledby="myModalLabel">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span></button>
+                                            <h4 class="modal-title" id="myModalLabel">{{ i.label_name }}</h4>
+                                        </div>
+                                        <form>
+                                            {% csrf_token %}
+                                            <div class="modal-body">
+                                                {% for e in my_str %}
+                                                    <div class="checkbox">
+                                                        <label>
+                                                            <input type="checkbox" id="checked">{{ e.article_title }}
+                                                            <span id="article_id"
+                                                                  style="display: none">{{ e.article_id }}</span>
+                                                        </label>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                                                </button>
+                                                <a class="btn btn-primary" id="save">保存</a>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        <button type="button" class="btn btn-default">+ 新增标签</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3" style="padding-left:0;padding-right: 0;">
+                <div class="panel panel-default">
+                    <div class="panel-heading">今日推荐</div>
+                    <div class="panel-body">
+                        Panel content
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="col-md-9" style="padding-left: 0">
+                <div class="media">
+                    <div class="media-left">
+                    </div>
+                    <div class="media-body">
+                        {% for i in my_str %}
+                            <a style="text-decoration: none" href="/Beeblog/{{ i.usr_id }}-0-{{ i.article_id }}"><h4
+                                    class="media-heading">{{ i.article_title }}</h4></a>
+                            <p>{{ i.article_info }}</p>
+                        {% endfor %}
+                    </div>
+                </div>
+                <nav aria-label="..." style="text-align: center">
+                    <ul class="pagination">
+                        {{ pag_str }}
+                    </ul>
+                </nav>
+            </div>
+            <div class="col-md-3" style="padding-left:0;padding-right: 0;">
+                <div class="panel panel-default">
+                    <div class="panel-heading">博主信息</div>
+                    <div class="panel-body">
+                        {% for i in user_all %}
+                            <div>{{ i.user_header }}</div>
+                            <div>{{ i.user_name }}</div>
+                            <div>关注：{{i.user_follow }}</div>
+                            <div>粉丝：{{i.user_fan }}</div>
+                            <div>{{ i.user_email }}</div>
+                            <div>{{ i.user_sentence }}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+</div>
+<script src="/static/jquery-3.4.1.min.js"></script>
+<script type="text/javascript" src="/static/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+<script src="/static/jquery.bxslider.js"></script>
+<script src="/static/ueditor/ueditor.config.js"></script>
+<script src="/static/ueditor/ueditor.all.min.js"></script>
+<script>
+    function pageScroll() {
+//把内容滚动指定的像素数（第一个参数是向右滚动的像素数，第二个参数是向下滚动的像素数）
+        window.scrollBy(0, -100);
+//延时递归调用，模拟滚动向上效果
+        scrolldelay = setTimeout('pageScroll()', 10);
+//获取scrollTop值，声明了DTD的标准网页取document.documentElement.scrollTop，否则取document.body.scrollTop；因为二者只有一个会生效，另一个就恒为0，所以取和值可以得到网页的真正的scrollTop值
+        var sTop = document.documentElement.scrollTop + document.body.scrollTop;
+//判断当页面到达顶部，取消延时代码（否则页面滚动到顶部会无法再向下正常浏览页面）
+        if (sTop == 0) clearTimeout(scrolldelay);
+    }
+
+    var ue = UE.getEditor('editor', {
+        'initialFrameWidth': 1125,
+        'initialFrameHeight': 500
+    });
+    $('#myModal').on('shown.bs.modal', function () {
+        $('#myInput').focus()
+    });
+    $('#save').click(function () {
+        $.ajax({
+            url: "personalweb.html",
+            type: "POST",
+            data: {
+                'label_id': $('#label_id').text(),
+                'checked': $('#checked').prop("checked"),
+                'article_id': $('#article_id').text(),
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            success: function (data) {
+                if (data == "OK") {
+                    window.location.reload()
+                }
+            }
+        })
+    });
+
+    function showAndHidden1(id1,id2){
+   var div1=document.getElementById("div"+id1);
+   var div2=document.getElementById("div"+id2);
+   if(div1.style.display=="block"){
+      div1.style.display="none";
+      div2.style.display="block"
+   }else{
+      div1.style.display="block";
+      div2.style.display="none";
+   }
+}
+    comment = "";
+    reply_to = "";
+    function reply(comment_id,reply) {
+        comment = comment_id;
+        reply_to = reply;
+    }
+    function send() {
+        $.ajax({
+            url: "personalweb.html",
+            type: 'POST',
+            data: {
+                'comment_id': comment,
+                'message_text': $('#content1').val(),
+                'reply_to': reply_to,
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            success: function (data) {
+                if (data == "OK") {
+                   window.location.reload()
+                }else {
+                    return 0
+                }
+            }
+        })
+    }
+</script>
+</body>
+</html>

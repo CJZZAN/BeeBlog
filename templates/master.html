@@ -1,0 +1,148 @@
+{% block page %}{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Beeblog</title>
+    <link href="/static/bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/jquery.bxslider.css">
+    <link rel="stylesheet" href="/static/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="shortcut icon" href="/static/favicon1.ico" />
+</head>
+<style>
+    body {
+        margin: 0;
+    }
+
+    .active {
+        background-color: gainsboro;
+        border-radius: 10%;
+    }
+    .blog:hover{
+        background-color: gainsboro !important;
+    }
+</style>
+<body>
+<button onclick="pageScroll()" style="position: fixed;bottom: 10%;right: 10%;z-index: 20" type="button"
+        class="btn btn-default btn-lg">
+    <a style="text-decoration: none"><span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span> 返回顶部</a>
+</button>
+<nav class="navbar navbar-default" style="padding: 5px 0">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            {% block main %}{% endblock %}
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                {% block article_type %}
+                {% endblock %}
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false">其他<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        {% for i in else_list %}
+                            <li><a>{{ i.type_name }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </li>
+            </ul>
+            <form class="navbar-form navbar-left" >
+                <div class="form-group" style="width: 400px">
+                    <input name="q" id="search_keywords" type="text" style="width: 400px" class="form-control" placeholder="区块链">
+                </div>
+                <button type="button" onclick="search_click()" class="btn btn-default">搜索</button>
+            </form>
+            <ul class="nav navbar-nav navbar-right">
+                {% block content %}
+                {% endblock %}
+            </ul>
+        </div>
+    </div>
+</nav>
+<div>
+    <div class="container">
+
+        <div class="col-md-9" style="padding-left: 0">
+            <div style="height: 540px;width: 845px;overflow: hidden">
+                <ul class="bxslider">
+                    <li><img style="height: 500px;width: 840px" src="/static/img/example1.jpg" alt="1"></li>
+                    <li><img style="height: 500px;width: 840px" src="/static/img/example2.jpg" alt="1"></li>
+                    <li><img style="height: 500px;width: 840px" src="/static/img/example3.jpg" alt="1"></li>
+                    <li><img style="height: 500px;width: 840px" src="/static/img/example4.jpg" alt="1"></li>
+                </ul>
+            </div>
+            <div class="media">
+{#                <div class="media-left">#}
+{#                    <a href="#">#}
+{#                        <img class="media-object" data-src="holder.js/64x64" alt="64x64"#}
+{#                             src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+PCEtLQpTb3VyY2UgVVJMOiBob2xkZXIuanMvNjR4NjQKQ3JlYXRlZCB3aXRoIEhvbGRlci5qcyAyLjYuMC4KTGVhcm4gbW9yZSBhdCBodHRwOi8vaG9sZGVyanMuY29tCihjKSAyMDEyLTIwMTUgSXZhbiBNYWxvcGluc2t5IC0gaHR0cDovL2ltc2t5LmNvCi0tPjxkZWZzPjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+PCFbQ0RBVEFbI2hvbGRlcl8xNmUyMTZhZjNjMCB0ZXh0IHsgZmlsbDojQUFBQUFBO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1mYW1pbHk6QXJpYWwsIEhlbHZldGljYSwgT3BlbiBTYW5zLCBzYW5zLXNlcmlmLCBtb25vc3BhY2U7Zm9udC1zaXplOjEwcHQgfSBdXT48L3N0eWxlPjwvZGVmcz48ZyBpZD0iaG9sZGVyXzE2ZTIxNmFmM2MwIj48cmVjdCB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIGZpbGw9IiNFRUVFRUUiLz48Zz48dGV4dCB4PSIxMy40NjA5Mzc1IiB5PSIzNi41Ij42NHg2NDwvdGV4dD48L2c+PC9nPjwvc3ZnPg=="#}
+{#                             data-holder-rendered="true" style="width: 64px; height: 64px;">#}
+{#                    </a>#}
+{#                </div>#}
+                <div class="media-body">
+                    {% for i in a %}
+                        <div style="margin-bottom: 15px;padding: 7px;border-radius: 5px;background-color: #eeeeee" class="blog">
+                        <a style="text-decoration: none;font-size: 20px;font-weight: bold" class="media-heading" href="/Beeblog/{{ i.usr_id }}-0-{{ i.article_id }}">{{ i.article_title }}</a>
+                        <p style="margin-bottom: 0">{{ i.article_info }}</p>
+                        <a href="personalweb.html"><span style="border-radius: 50%"><img style="border-radius:50%;height: 30px;width: 30px" src="/static/upload/headers/IMG_1298.JPG"></span></a>
+                        <a style="text-decoration: none">{{ i.usr.user_name }}</a>
+                        <div style="float: right;">   
+                        <i class="fa fa-thumbs-o-up fa-lg" aria-hidden="true"> 4096 </i>
+                        <i class="fa fa-commenting-o fa-lg" aria-hidden="true"> 2000 </i>
+                        </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <nav aria-label="..." style="text-align: center">
+                <ul class="pagination">
+                    {{ pag_str }}
+                </ul>
+            </nav>
+        </div>
+        <div class="col-md-3" style="padding-left:0;padding-right: 0;">
+            <div class="panel panel-default">
+                <div class="panel-heading">今日推荐</div>
+                <div class="panel-body">
+                    {% for i in top_list %}
+                        <a style="display: inline-block;margin: 5px 0;text-decoration: none;cursor: pointer">{{ i.article_title }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/static/jquery-3.4.1.min.js"></script>
+<script type="text/javascript" src="/static/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+<script src="/static/jquery.bxslider.js"></script>
+<script>
+    $('.bxslider').bxSlider({
+        auto: true,
+        pause: 3000,
+        controls: true,
+        randomStart: true
+    });
+
+    function pageScroll() {
+//把内容滚动指定的像素数（第一个参数是向右滚动的像素数，第二个参数是向下滚动的像素数）
+        window.scrollBy(0, -100);
+//延时递归调用，模拟滚动向上效果
+        scrolldelay = setTimeout('pageScroll()', 10);
+//获取scrollTop值，声明了DTD的标准网页取document.documentElement.scrollTop，否则取document.body.scrollTop；因为二者只有一个会生效，另一个就恒为0，所以取和值可以得到网页的真正的scrollTop值
+        var sTop = document.documentElement.scrollTop + document.body.scrollTop;
+//判断当页面到达顶部，取消延时代码（否则页面滚动到顶部会无法再向下正常浏览页面）
+        if (sTop == 0) clearTimeout(scrolldelay);
+    }
+    {% block search %}
+    {% endblock %}
+
+</script>
+</body>
+</html>

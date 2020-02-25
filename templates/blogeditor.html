@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Beeblog</title>
+    <link href="/static/bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/jquery.bxslider.css">
+    <link rel="shortcut icon" href="/static/favicon1.ico" />
+</head>
+<style>
+    body {
+        margin: 0;
+    }
+
+    .active {
+        background-color: gainsboro;
+        border-radius: 10%;
+    }
+</style>
+<body>
+<button onclick="pageScroll()" style="position: fixed;bottom: 10%;right: 10%;z-index: 20" type="button"
+        class="btn btn-default btn-lg">
+    <a style="text-decoration: none;"><span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span> 返回顶部</a>
+</button>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">是否放弃此次编辑？</h4>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+          {{ back }}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div>
+    <div class="container" style="margin-top: 20px">
+            <div class="col-md-9" style="padding-left: 0;width: 1150px">
+            <div class="media">
+                <div class="media-left">
+                </div>
+                <div class="media-body">
+                    <form action="blogeditor.html" method="POST" style="z-index: 10">
+                        {% csrf_token %}
+                        <label for="title">标题</label>
+{#                        <input class="form-control" type="text" id="title" name="title" placeholder="请输入标题">#}
+                        {{ obj.title }}
+                        <div style="color: red">{{ obj.title.errors.0 }}</div>
+                        <label for="info">描述</label>
+{#                        <textarea id="info" class="form-control" name="info" placeholder="此字段将显示于主页链接"></textarea>#}
+                        {{ obj.info }}
+                        <div style="color: red">{{ obj.info.errors.0 }}</div>
+                        <label for="content">正文</label>
+                        <textarea  id="content" name="content"></textarea>
+                        <div>
+                        <label for="article_type">文章类型</label>
+                        <select id="article_type" name="article_type" >
+                            {% for t in article_type  %}
+                                <option value ={{ t.type_id }}>{{ t.type_name }}</option>
+                            {% endfor %}
+                        </select>
+                            </div>
+                        <input type="submit" class="btn btn-default" value="确定">
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">放弃</button>
+                    </form>
+                </div>
+            </div>
+            </div>
+    </div>
+</div>
+<script src="/static/jquery-3.4.1.min.js"></script>
+<script type="text/javascript" src="/static/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+<script src="/static/jquery.bxslider.js"></script>
+<script src="/static/ueditor/ueditor.config.js"></script>
+<script src="/static/ueditor/ueditor.all.min.js"></script>
+<script>
+    function pageScroll() {
+//把内容滚动指定的像素数（第一个参数是向右滚动的像素数，第二个参数是向下滚动的像素数）
+        window.scrollBy(0, -100);
+//延时递归调用，模拟滚动向上效果
+        scrolldelay = setTimeout('pageScroll()', 10);
+//获取scrollTop值，声明了DTD的标准网页取document.documentElement.scrollTop，否则取document.body.scrollTop；因为二者只有一个会生效，另一个就恒为0，所以取和值可以得到网页的真正的scrollTop值
+        var sTop = document.documentElement.scrollTop + document.body.scrollTop;
+//判断当页面到达顶部，取消延时代码（否则页面滚动到顶部会无法再向下正常浏览页面）
+        if (sTop == 0) clearTimeout(scrolldelay);
+    }
+
+    var ue = UE.getEditor('content', {
+        'initialFrameWidth': 1125,
+        'initialFrameHeight': 500,
+        'zIndex':10
+    });
+    $('#myModal').on('shown.bs.modal', function () {
+    $('#myInput').focus()
+})
+</script>
+</body>
+</html>

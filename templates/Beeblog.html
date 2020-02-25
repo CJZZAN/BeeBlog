@@ -1,0 +1,27 @@
+{% extends 'master.html' %}
+{% block page %}{% load filter1 %}{% endblock %}
+{% block main %}<a class="navbar-brand" href="/Beeblog">Beeblog</a>{% endblock %}
+{% block article_type %}
+    {% filter_article_type article_type_list arg_dict %}
+{% endblock %}
+{% block content %}
+    <li>
+        <a href="/login/login" role="button" aria-haspopup="true"
+           aria-expanded="false">您好，请登录</a>
+    </li>
+    <li>
+        <a href="/login/register" role="button" aria-haspopup="true"
+           aria-expanded="false">注册</a>
+    </li>
+{% endblock %}
+{% block search %}
+    function search_click(){
+    var keywords = $('#search_keywords').val(),
+    request_url = '';
+    if(keywords == ""){
+    return
+    }
+    request_url = "/Beeblog?keywords="+keywords;
+
+    window.location.href = request_url}
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends 'master2.html' %}
+{% block page %}{% load filter2 %}{% endblock %}
+{% block main %}<a class="navbar-brand" href="/main/home">Beeblog</a>{% endblock %}
+{% block article_type %}
+    {{ my_main }}
+    {{ my_editor }}
+    {{ my_collection }}
+    {{ my_manage }}
+{% endblock %}
+{% block content %}
+    <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+           aria-expanded="false">{{ username }}<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+            {{ my_main }}
+            <li><a href="#">设置</a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="http://127.0.0.1:8000/Beeblog">注销</a></li>
+        </ul>
+    </li>
+{% endblock %}

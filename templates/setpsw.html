@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Beeblog</title>
+    <script src="/static/jquery-3.4.1.min.js"></script>
+    <link href="/static/bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="shortcut icon" href="/static/favicon1.ico" />
+    <style>
+        .hide {
+            display: none;
+        }
+    </style>
+</head>
+<body style="background-color: #dddddd">
+<div style="position: absolute;width: 500px;height:300px;left:50%;top:50%;margin-top: -150px;margin-left:-250px;background-color: white;border-radius: 2%">
+    <div style="margin:0 auto;width: 300px;height:120px;background-color: white;margin-top: 40px">
+        <form>
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="password">新密码</label>
+                <input type="password" class="form-control" name="password" id="password">
+            </div>
+            <div class="form-group">
+                <label for="passwordack">确认密码</label>
+                <input type="password" class="form-control" name="passwordack" id="passwordack">
+            </div>
+            <div id="hide" class="hide" style="float: right;color: red;"></div>
+            <div>
+                <a id="confirm" class="btn btn-default">确认</a>
+                <a href="login.html" class="btn btn-default">取消</a>
+            </div>
+        </form>
+        <div style="width:240px;margin: 0 auto;margin-top: 20px;color: #919191">Talk is cheap,Show me your code
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="/static/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+<script>
+    $('#confirm').click(function () {
+        $.ajax({
+            url: "setpsw.html",
+            type: 'POST',
+            data: {
+                'password': $('#password').val(),
+                'passwordack': $('#passwordack').val(),
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            success: function (data) {
+                if (data == "FAILED") {
+                    $('#hide').text("新密码不能与旧密码一致").removeClass('hide')
+                }else if(data == "FAILED1"){
+                    $('#hide').text("两次密码不一致").removeClass('hide')
+                }else if(data == "OK"){
+                    window.location.reload()
+                }else {
+                    $('#hide').text("请输入密码").removeClass('hide')
+                }
+            }
+        })
+    });
+</script>
+{% if messages %}
+    <script>
+        {% for msg in messages %}
+            alert('{{ msg.message }}');
+                location.href = 'login.html';
+        {% endfor %}
+    </script>
+{% endif %}
+</body>
+</html>

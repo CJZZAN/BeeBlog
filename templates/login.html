@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Beeblog</title>
+    <script src="/static/jquery-3.4.1.min.js"></script>
+    <link href="/static/bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="shortcut icon" href="/static/favicon1.ico" />
+    <style>
+        .hide {
+            display: none;
+        }
+    </style>
+</head>
+<body style="background-color: #dddddd">
+<div style="position: absolute;width: 500px;height:500px;left:50%;top:50%;margin-top: -250px;margin-left:-250px;background-color: white;border-radius: 2%">
+    <div style="margin:0 auto;height: 70px;width: 70px;margin-top: 90px;">
+        <i class="fa fa-user-circle fa-5x" aria-hidden="true"></i>
+    </div>
+    <div style="margin:0 auto;width: 300px;height:220px;background-color: white;">
+        <form >
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="email">邮箱</label>
+                <input type="text" class="form-control" name="email" id="email" placeholder="1227412679@163.com">
+            </div>
+            <div class="form-group">
+                <label for="password">密码</label>
+                <input type="password" class="form-control" name="password" id="password" placeholder="Password">
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" name="remember" id="remember" checked="checked" value="1"> 记住我
+                </label>
+                <div id="hide" class="hide" style="float: right;color: red;"></div>
+            </div>
+            <a id="login" class="btn btn-default">登录</a>
+            <a href="register.html" class="btn btn-default">注册</a>
+            <a href="findpsw.html" style="text-decoration: none">忘记密码？</a>
+        </form>
+        <div style="width:240px;margin: 0 auto;margin-top: 40px;color: #919191;padding-left: 10px">Talk is cheap,Show me your code
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="/static/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+<script>
+    $('#login').click(function () {
+        $.ajax({
+            url: "login.html",
+            type: 'POST',
+            data: {
+                'email': $('#email').val(),
+                'pwd': $('#password').val(),
+                'remember': $('#remember').prop("checked"),
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            success: function (data) {
+                if (data == "FAILED") {
+                    $('#hide').text("邮箱不存在").removeClass('hide')
+                }else if(data == "FAILED1"){
+                    $('#hide').text("密码错误").removeClass('hide')
+                }else if(data == "OK"){
+                    window.location.href = '../main/home'
+                }else {
+                    $('#hide').text("邮箱与用户名不能为空").removeClass('hide')
+                }
+            }
+        })
+    });
+</script>
+</body>
+</html>
